@@ -2,7 +2,7 @@
 SETLOCAL EnableDelayedExpansion
 set /p pat=Enter path to file needed: 
 cd %pat%
-set /p infile=Enter name of batch file to painfully compile to c using batch(without .c ending): 
+set /p infile=Enter name of batch file to painfully compile to c using batch(without .bat ending): 
 echo excruciatingly creating symbol table....
 :SyntacticAnalyzer
 set index=0
@@ -10,7 +10,7 @@ set percen="%"
 set semIndex=0
 set symbols[0]=
 set values[0]=
-FOR /F "tokens=1* delims= " %%a in (%infile%.c) DO (
+FOR /F "tokens=1* delims= " %%a in (%infile%.bat) DO (
        set symbol=%%a
        set value=%%b
        if /i "!symbol!"=="setlocal" echo "SCOPESETTINGS symbol: %%a"
