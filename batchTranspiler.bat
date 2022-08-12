@@ -159,7 +159,7 @@ gcc %infile%.c -o %infile%
 echo DONE!
 pause
 echo running c code...
-.\%infile%.c
+.\%infile%
 :Error
 pause
 exit
