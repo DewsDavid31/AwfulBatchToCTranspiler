@@ -2,7 +2,7 @@
 SETLOCAL EnableDelayedExpansion
 set /p pat=Enter path to file needed: 
 cd %pat%
-set /p infile=Enter a batch file to painfully compile to c using batch: 
+set /p infile=Enter name of batch file to painfully compile to c using batch(without .c ending): 
 echo excruciatingly creating symbol table....
 :SyntacticAnalyzer
 set index=0
@@ -10,7 +10,7 @@ set percen="%"
 set semIndex=0
 set symbols[0]=
 set values[0]=
-FOR /F "tokens=1* delims= " %%a in (%infile%) DO (
+FOR /F "tokens=1* delims= " %%a in (%infile%.c) DO (
        set symbol=%%a
        set value=%%b
        if /i "!symbol!"=="setlocal" echo "SCOPESETTINGS symbol: %%a"
@@ -129,24 +129,24 @@ set /a "semIndex+=1"
 GOTO :SemLoop
 )   
 echo valid file! converting to c file, slowly and grossly
-echo int main(){ > %infile%converted.c
+echo int main(){ > %infile%.c
 set srcIndex=0
 set varIndex=0
 :srcLoop
 if defined symbols[%srcIndex%] (
 call set sr=%%symbols[%srcIndex%]%%
 call set vl=%%values[%srcIndex%]%%
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%converted.c
-if !sr!=="JUMP" echo printf("fors not yet supported"); >> %infile%converted.c
-if !sr!=="MACRO" echo printf("macros not yet supported, no linker"); >> %infile%converted.c
-if !sr!=="ASSIGN" echo char a%varIndex%[] = "not fully supported"); >> %infile%converted.c
-if !sr!=="PRINT" echo printf("!vl!\n"); >> %infile%converted.c
-if !sr!=="IF" echo printf("ifs not yet supported"); >> %infile%converted.c
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%converted.c
+if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
+if !sr!=="JUMP" echo printf("fors not yet supported"); >> %infile%.c
+if !sr!=="MACRO" echo printf("macros not yet supported, no linker"); >> %infile%.c
+if !sr!=="ASSIGN" echo char a%varIndex%[] = "not fully supported"); >> %infile%.c
+if !sr!=="PRINT" echo printf("!vl!\n"); >> %infile%.c
+if !sr!=="IF" echo printf("ifs not yet supported"); >> %infile%.c
+if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
 if !sr!=="LITERAL" goto :skip
-if !sr!=="COMPARATOR" echo printf("booleans not yet supported"); >> %infile%converted.c
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%converted.c
-if !sr!=="VAR" echo printf("variables not yet supported"); >> %infile%converted.c
+if !sr!=="COMPARATOR" echo printf("booleans not yet supported"); >> %infile%.c
+if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
+if !sr!=="VAR" echo printf("variables not yet supported"); >> %infile%.c
 if !sr!=="EOF" GOTO :DONE
 :skip
 set /a "varIndex+=1"
@@ -154,8 +154,8 @@ set /a "srcIndex+=1"
 GOTO :srcLoop
 )
 :DONE
-echo } >> %infile%converted.c
-gcc %infile%converted.c -o %infile%converted
+echo } >> %infile%.c
+gcc %infile%.c -o %infile%
 echo DONE!
 pause
 echo running c code...
