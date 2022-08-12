@@ -1,6 +1,6 @@
 @echo off
 SETLOCAL EnableDelayedExpansion
-set /p pat=Enter path to file needed
+set /p pat=Enter path to file needed: 
 cd %pat%
 set /p infile=Enter a batch file to painfully compile to c using batch: 
 echo excruciatingly creating symbol table....
