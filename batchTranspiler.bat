@@ -129,24 +129,24 @@ set /a "semIndex+=1"
 GOTO :SemLoop
 )   
 echo valid file! converting to c file, slowly and grossly
-echo int main(){ > %infile%.c
+echo int main(){ > %infile%converted.c
 set srcIndex=0
 set varIndex=0
 :srcLoop
 if defined symbols[%srcIndex%] (
 call set sr=%%symbols[%srcIndex%]%%
 call set vl=%%values[%srcIndex%]%%
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
-if !sr!=="JUMP" echo printf("fors not yet supported"); >> %infile%.c
-if !sr!=="MACRO" echo printf("macros not yet supported, no linker"); >> %infile%.c
-if !sr!=="ASSIGN" echo string a%varIndex% = "not fully supported"; >> %infile%.c
-if !sr!=="PRINT" echo printf("!vl!\n"); >> output.c
-if !sr!=="IF" echo printf("ifs not yet supported"); >> %infile%.c
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
+if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%converted.c
+if !sr!=="JUMP" echo printf("fors not yet supported"); >> %infile%converted.c
+if !sr!=="MACRO" echo printf("macros not yet supported, no linker"); >> %infile%converted.c
+if !sr!=="ASSIGN" echo char a%varIndex%[] = "not fully supported"); >> %infile%converted.c
+if !sr!=="PRINT" echo printf("!vl!\n"); >> %infile%converted.c
+if !sr!=="IF" echo printf("ifs not yet supported"); >> %infile%converted.c
+if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%converted.c
 if !sr!=="LITERAL" goto :skip
-if !sr!=="COMPARATOR" echo printf("booleans not yet supported"); >> %infile%.c
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
-if !sr!=="VAR" printf("variables not yet supported"); >> %infile%.c
+if !sr!=="COMPARATOR" echo printf("booleans not yet supported"); >> %infile%converted.c
+if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%converted.c
+if !sr!=="VAR" echo printf("variables not yet supported"); >> %infile%converted.c
 if !sr!=="EOF" GOTO :DONE
 :skip
 set /a "varIndex+=1"
@@ -154,12 +154,12 @@ set /a "srcIndex+=1"
 GOTO :srcLoop
 )
 :DONE
-echo } >> output.c
-gcc output.c -o output
+echo } >> %infile%converted.c
+gcc %infile%converted.c -o %infile%converted
 echo DONE!
 pause
 echo running c code...
-.\output
+.\%infile%converted
 :Error
 pause
 exit
