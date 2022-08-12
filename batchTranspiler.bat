@@ -139,7 +139,7 @@ call set vl=%%values[%srcIndex%]%%
 if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
 if !sr!=="JUMP" echo printf("fors not yet supported"); >> %infile%.c
 if !sr!=="MACRO" echo printf("macros not yet supported, no linker"); >> %infile%.c
-if !sr!=="ASSIGN" echo char a%varIndex%[] = "not fully supported"); >> %infile%.c
+if !sr!=="ASSIGN" echo char a%varIndex%[] = "not fully supported"; >> %infile%.c
 if !sr!=="PRINT" echo printf("!vl!\n"); >> %infile%.c
 if !sr!=="IF" echo printf("ifs not yet supported"); >> %infile%.c
 if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
