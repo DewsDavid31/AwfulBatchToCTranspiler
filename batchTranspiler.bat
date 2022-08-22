@@ -136,17 +136,15 @@ set varIndex=0
 if defined symbols[%srcIndex%] (
 call set sr=%%symbols[%srcIndex%]%%
 call set vl=%%values[%srcIndex%]%%
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
-if !sr!=="JUMP" echo printf("fors not yet supported"); >> %infile%.c
-if !sr!=="MACRO" echo printf("macros not yet supported, no linker"); >> %infile%.c
+if !sr!=="FOR" echo printf^("fors not yet supported"^); >> %infile%.c
+if !sr!=="JUMP" echo printf^("jumps not yet supported"^); >> %infile%.c
+if !sr!=="MACRO" echo printf^("macros not yet supported, no linker"^); >> %infile%.c
 if !sr!=="ASSIGN" echo char a%varIndex%[] = "not fully supported"; >> %infile%.c
-if !sr!=="PRINT" echo printf("!vl!\n"); >> %infile%.c
-if !sr!=="IF" echo printf("ifs not yet supported"); >> %infile%.c
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
+if !sr!=="PRINT" echo printf^("!vl!"^); >> %infile%.c
+if !sr!=="IF" echo printf^("ifs not yet supported"^); >> %infile%.c
 if !sr!=="LITERAL" goto :skip
-if !sr!=="COMPARATOR" echo printf("booleans not yet supported"); >> %infile%.c
-if !sr!=="FOR" echo printf("fors not yet supported"); >> %infile%.c
-if !sr!=="VAR" echo printf("variables not yet supported"); >> %infile%.c
+if !sr!=="COMPARATOR" echo printf^("booleans not yet supported"^); >> %infile%.c
+if !sr!=="VAR" echo printf^("variables not yet supported"^); >> %infile%.c
 if !sr!=="EOF" GOTO :DONE
 :skip
 set /a "varIndex+=1"
@@ -154,7 +152,8 @@ set /a "srcIndex+=1"
 GOTO :srcLoop
 )
 :DONE
-echo } >> %infile%.c
+echo ^} >> %infile%.c
+powershell -Command "(Get-Content %infile%.c -Raw) -Replace [regex]::Escape('\'),[regex]::Escape('') | Set-Content %infile%.c"
 gcc %infile%.c -o %infile%
 echo DONE!
 pause
