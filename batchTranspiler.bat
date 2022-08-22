@@ -57,6 +57,7 @@ FOR /F "tokens=1* delims= " %%a in (%infile%.bat) DO (
          set /a "index=index+1"
    )
 set symbols[!index!]="EOF"
+pause
 echo painfully verifying grammar....
 set openBlockFlag=0
 :SemLoop
@@ -140,7 +141,8 @@ if !sr!=="FOR" echo printf^("fors not yet supported"^); >> %infile%.c
 if !sr!=="JUMP" echo printf^("jumps not yet supported"^); >> %infile%.c
 if !sr!=="MACRO" echo printf^("macros not yet supported, no linker"^); >> %infile%.c
 if !sr!=="ASSIGN" echo char a%varIndex%[] = "not fully supported"; >> %infile%.c
-if !sr!=="PRINT" echo printf^("!vl!"^); >> %infile%.c
+if !sr!=="PRINT" set str=!vl!
+if !sr!=="PRINT" goto :printstr
 if !sr!=="IF" echo printf^("ifs not yet supported"^); >> %infile%.c
 if !sr!=="LITERAL" goto :skip
 if !sr!=="COMPARATOR" echo printf^("booleans not yet supported"^); >> %infile%.c
@@ -151,9 +153,21 @@ set /a "varIndex+=1"
 set /a "srcIndex+=1"
 GOTO :srcLoop
 )
+:printstr
+call set next=%%values[!srcIndex!]%%
+set /a "varIndex+=1"
+set /a "srcIndex+=1"
+call set sr=%%symbols[%srcIndex%]%%
+call set vl=%%values[%srcIndex%]%%
+if !sr!=="LITERAL" set str=!str! !vl!
+if !sr!=="LITERAL" goto :printstr
+echo printf^("!str!"^); >> %infile%.c
+echo printf^("\n"^); >> %infile%.c
+set /a "varIndex-=1"
+set /a "srcIndex-=1"
+goto :srcLoop
 :DONE
 echo ^} >> %infile%.c
-powershell -Command "(Get-Content %infile%.c -Raw) -Replace [regex]::Escape('\'),[regex]::Escape('') | Set-Content %infile%.c"
 gcc %infile%.c -o %infile%
 echo DONE!
 pause
