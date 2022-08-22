@@ -163,8 +163,6 @@ if !sr!=="LITERAL" set str=!str! !vl!
 if !sr!=="LITERAL" goto :printstr
 echo printf^("!str!"^); >> %infile%.c
 echo printf^("\n"^); >> %infile%.c
-set /a "varIndex-=1"
-set /a "srcIndex-=1"
 goto :srcLoop
 :DONE
 echo ^} >> %infile%.c
